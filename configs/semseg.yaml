@@ -1,0 +1,4 @@
+_BASE_: "base.yaml"
+MODEL:
+  HEADS3D:
+    HEADS: ["tsdf", "semseg"]
