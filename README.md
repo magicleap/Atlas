@@ -1,6 +1,6 @@
 # ATLAS: End-to-End 3D Scene Reconstruction from Posed Images
 
-### [Project Page](http://zak.murez.com/atlas) | [Paper](https://arxiv.org/abs/2003.10432) | [Models](https://drive.google.com/file/d/12P29x6revvNWREdZ01ufJwMFPl-FEI_V/view?usp=sharing) | [Sample Data](https://drive.google.com/file/d/13-D7QNVZjj864E768zJ7IWDDqY6agUES/view?usp=sharing)
+### [Project Page](http://zak.murez.com/atlas) | [Paper](https://arxiv.org/abs/2003.10432) | [Video](https://youtu.be/9NOPcOGV6nU) | [Models](https://drive.google.com/file/d/12P29x6revvNWREdZ01ufJwMFPl-FEI_V/view?usp=sharing) | [Sample Data](https://drive.google.com/file/d/13-D7QNVZjj864E768zJ7IWDDqY6agUES/view?usp=sharing)
 
 [Zak Murez](http://zak.murez.com), 
 Tarrence van As,
