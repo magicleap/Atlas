@@ -9,6 +9,7 @@ Ayan Sinha,
 Vijay Badrinarayanan, and 
 Andrew Rabinovich
 
+<img src='imgs/AtlasGIF.gif'/>
 <img src='imgs/figure1.jpg'/>
 
 ## Quickstart
