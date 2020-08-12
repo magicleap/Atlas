@@ -74,7 +74,8 @@ RUN pip install \
   trimesh>=3.7.6 \
   pyquaternion>=0.9.5 \
   pytorch-lightning>=0.8.5 \
-  pyrender>=0.1.43
+  pyrender>=0.1.43 \
+  scikit-image
 RUN python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu102/torch1.5/index.html
 
 # For 16bit mixed precision
