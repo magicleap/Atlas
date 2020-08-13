@@ -3,6 +3,7 @@ FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 RUN apt-get update && apt-get install -y \
     cmake \
     wget \
+    curl \
     git \
     rsync \
     sudo \
@@ -34,14 +35,14 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://ceres-solver.googlesource.com/ceres-solver
 RUN mkdir -p ceres-solver/build
 WORKDIR ceres-solver/build
-RUN cmake -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF .. && make && make install && make clean 
+RUN cmake -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF .. && make -j$(nproc) && make install && make clean 
 WORKDIR /
 
 # Install Colmap
 RUN git clone https://github.com/colmap/colmap
 RUN mkdir -p colmap/build
 WORKDIR colmap/build
-RUN cmake -DCMAKE_BUILD_TYPE=Release -DTESTS_ENABLED=OFF .. && make && make install && make clean
+RUN cmake -DCMAKE_BUILD_TYPE=Release -DTESTS_ENABLED=OFF .. && make -j$(nproc) && make install && make clean
 WORKDIR /
 
 
@@ -73,7 +74,8 @@ RUN pip install \
   trimesh>=3.7.6 \
   pyquaternion>=0.9.5 \
   pytorch-lightning>=0.8.5 \
-  pyrender>=0.1.43
+  pyrender>=0.1.43 \
+  scikit-image
 RUN python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu102/torch1.5/index.html
 
 # For 16bit mixed precision
