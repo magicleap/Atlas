@@ -68,6 +68,7 @@ python prepare_data.py --path DATAROOT --path_meta METAROOT --dataset sample
 
 #### Scannet
 Download and extract Scannet by following the instructions provided at http://www.scan-net.org/.
+You also need to download the train/val/test splits from https://github.com/ScanNet/ScanNet/tree/master/Tasks/Benchmark.
 The directory structure should look like:
 ```
 DATAROOT
@@ -80,11 +81,14 @@ DATAROOT
 │   |       │   │   ...
 │   |       │   ...
 │   └───scans_test
-│           └───color
-│           │   │   0.jpg
-│           │   │   1.jpg
-│           │   │   ...
-│           │   ...
+│   |       └───color
+│   |       │   │   0.jpg
+│   |       │   │   1.jpg
+│   |       │   │   ...
+│   |       │   ...
+|   └───scannetv2_test.txt
+|   └───scannetv2_train.txt
+|   └───scannetv2_val.txt
 ```
 Next run our data preperation script which parses the raw data format into our common json format (more info [here](atlas/datasets/README.md))
 (note that we store our derivered data in a seperate folder `METAROOT` to prevent pollution of the original data).
