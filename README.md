@@ -68,7 +68,7 @@ python prepare_data.py --path DATAROOT --path_meta METAROOT --dataset sample
 
 #### Scannet
 Download and extract Scannet by following the instructions provided at http://www.scan-net.org/.
-You also need to download the train/val/test splits from https://github.com/ScanNet/ScanNet/tree/master/Tasks/Benchmark.
+You also need to download the train/val/test splits and the label mapping from https://github.com/ScanNet/ScanNet (Benchmark Tasks).
 The directory structure should look like:
 ```
 DATAROOT
@@ -86,6 +86,7 @@ DATAROOT
 │   |       │   │   1.jpg
 │   |       │   │   ...
 │   |       │   ...
+|   └───scannetv2-labels.combined.tsv
 |   └───scannetv2_test.txt
 |   └───scannetv2_train.txt
 |   └───scannetv2_val.txt
