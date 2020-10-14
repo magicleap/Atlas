@@ -104,8 +104,8 @@ def eval_mesh(file_pred, file_trgt, threshold=.05, down_sample=.02):
     dist1 = np.array(dist1)
     dist2 = np.array(dist2)
 
-    precision = np.mean((dist1<threshold).astype('float'))
-    recal = np.mean((dist2<threshold).astype('float'))
+    precision = np.mean((dist2<threshold).astype('float'))
+    recal = np.mean((dist1<threshold).astype('float'))
     fscore = 2 * precision * recal / (precision + recal)
     metrics = {'dist1': np.mean(dist1),
                'dist2': np.mean(dist2),
