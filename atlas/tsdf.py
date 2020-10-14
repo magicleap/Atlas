@@ -193,13 +193,13 @@ class TSDF():
         if 'semseg' in self.attribute_vols:
             semseg_vol = self.attribute_vols['semseg'].detach().cpu().numpy()
             semseg = semseg_vol[verts_ind[:,0],verts_ind[:,1],verts_ind[:,2]]
-            vertex_attributes['semseg'] = semseg
+            vertex_attributes['semseg'] = semseg.astype(np.int32)
 
         if 'instance' in self.attribute_vols:
             instance_vol = self.attribute_vols['instance']
             instance_vol = instance_vol.detach().cpu().numpy()
             instance = instance_vol[verts_ind[:,0],verts_ind[:,1],verts_ind[:,2]]
-            vertex_attributes['instance'] = instance
+            vertex_attributes['instance'] = instance.astype(np.int32)
 
         # color mesh
         if attribute=='color' and 'color' in self.attribute_vols:
