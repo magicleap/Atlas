@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
     libsuitesparse-dev \
     libcgal-dev \ 
     libeigen3-dev \
+    libusb-1.0-0 \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Ceres Solver
