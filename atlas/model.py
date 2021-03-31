@@ -122,6 +122,10 @@ class VoxelNet(pl.LightningModule):
         self.voxel_types = cfg.MODEL.HEADS3D.HEADS
         self.voxel_sizes = [int(cfg.VOXEL_SIZE*100)*2**i for i in 
                             range(len(cfg.MODEL.BACKBONE3D.LAYERS_DOWN)-1)]
+        
+        self.test_offset = 0
+        self.test_save_path = 0
+        self.test_scene = 0
 
         self.initialize_volume()
 
@@ -409,6 +413,26 @@ class VoxelNet(pl.LightningModule):
                       for key in outputs[0].keys()}
         avg_loss = sum(avg_losses.values())
         return {'val_loss': avg_loss, 'log': avg_losses}
+
+    def test_step(self, batch, batch_idx):
+        projection = batch['projection'].unsqueeze(0)
+        image = batch['image'].unsqueeze(0)
+
+        self.inference1(projection, image=image)
+
+        return {}
+
+    def test_epoch_end(self, outputs):
+        outputs, losses = self.inference2()
+
+        tsdf_pred = self.postprocess(outputs)[0]
+
+        tsdf_pred.origin = self.test_offset.view(1,3)
+
+        mesh_pred = tsdf_pred.get_mesh()
+
+        tsdf_pred.save(os.path.join(self.save_path, '%s.npz'%self.scene))
+        mesh_pred.export(os.path.join(self.save_path, '%s.ply'%self.scene))
 
 
     def configure_optimizers(self):
