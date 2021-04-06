@@ -66,65 +66,66 @@ def process(info_file, model, num_frames, save_path, total_scenes_index, total_s
     ])
     dataset.transform = transform
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=None,
-                                             batch_sampler=None, num_workers=2)
+                                             batch_sampler=None, num_workers=32)
 
     scene = dataset.info['scene']
 
     model.initialize_volume()
     torch.cuda.empty_cache()
 
-    trainer = pl.Trainer(
-        distributed_backend='ddp',
-        benchmark=True,
-        gpus=[0,1],
-        precision=16,
-        amp_level='O1')
+    # trainer = pl.Trainer(
+    #     distributed_backend='dp',
+    #     benchmark=False,
+    #     gpus=[5],
+    #     precision=32)
+    #     #num_sanitey_val_steps=0)
 
-    print(total_scenes_index,
-          total_scenes_count,
-          dataset.info['dataset'],
-          scene,
-          len(dataloader)
-    )
+    # print(total_scenes_index,
+    #       total_scenes_count,
+    #       dataset.info['dataset'],
+    #       scene,
+    #       len(dataloader)
+    # )
 
-    model.test_offset = offset.cuda()
-    model.save_path = save_path
-    model.scene = scene
-    trainer.test(model, test_dataloaders=dataloader)
+    # model.test_offset = offset.cuda()
+    # model.save_path = save_path
+    # model.scene = scene
+    # trainer.test(model, test_dataloaders=dataloader)
 
-    # for j, d in enumerate(dataloader):
+    for j, d in enumerate(dataloader):
 
-    #     # logging progress
-    #     if j%25==0:
-    #         print(total_scenes_index,
-    #               total_scenes_count,
-    #               dataset.info['dataset'],
-    #               scene,
-    #               j,
-    #               len(dataloader)
-    #         )
+        # logging progress
+        if j%25==0:
+            print(total_scenes_index,
+                  total_scenes_count,
+                  dataset.info['dataset'],
+                  scene,
+                  j,
+                  len(dataloader)
+            )
 
-    #     model.inference1(d['projection'].unsqueeze(0).cuda(),
-    #                      image=d['image'].unsqueeze(0).cuda())
-    # outputs, losses = model.inference2()
+        print(d['projection'].unsqueeze(0).shape, d['image'].unsqueeze(0).shape)
+        model.inference1(d['projection'].unsqueeze(0).cuda(),
+                         image=d['image'].unsqueeze(0).cuda())
+    outputs, losses = model.inference2()
 
-    # tsdf_pred = model.postprocess(outputs)[0]
+    tsdf_pred = model.postprocess(outputs)[0]
 
-    # # TODO: set origin in model... make consistent with offset above?
-    # tsdf_pred.origin = offset.view(1,3).cuda()
+    # TODO: set origin in model... make consistent with offset above?
+    tsdf_pred.origin = offset.view(1,3).cuda()
    
 
-    # if 'semseg' in tsdf_pred.attribute_vols:
-    #     mesh_pred = tsdf_pred.get_mesh('semseg')
+    if 'semseg' in tsdf_pred.attribute_vols:
+        mesh_pred = tsdf_pred.get_mesh('semseg')
 
-    #     # save vertex attributes seperately since trimesh doesn't
-    #     np.savez(os.path.join(save_path, '%s_attributes.npz'%scene), 
-    #             **mesh_pred.vertex_attributes)
-    # else:
-    #     mesh_pred = tsdf_pred.get_mesh()
+        # save vertex attributes seperately since trimesh doesn't
+        np.savez(os.path.join(save_path, '%s_attributes.npz'%scene), 
+                **mesh_pred.vertex_attributes)
+    else:
+        mesh_pred = tsdf_pred.get_mesh()
 
-    # tsdf_pred.save(os.path.join(save_path, '%s.npz'%scene))
-    # mesh_pred.export(os.path.join(save_path, '%s.ply'%scene))
+    tsdf_pred.save(os.path.join(save_path, '%s.npz'%scene))
+    mesh_pred.export(os.path.join(save_path, '%s.ply'%scene))
 
 
 

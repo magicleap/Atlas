@@ -1,0 +1,9 @@
+DATAROOT/*
+METAROOT/*
+results/*
+lightning_logs/*
+*/__pycache__/*
+
+*.pyc
+data.zip
+results.zip

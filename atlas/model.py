@@ -63,6 +63,7 @@ def backproject(voxel_dim, voxel_size, origin, projection, features):
     world = torch.cat((world, torch.ones_like(world[:,:1]) ), dim=1)
     
     camera = torch.bmm(projection, world)
+    #print('camera shape:', camera.shape)
     px = (camera[:,0,:]/camera[:,2,:]).round().type(torch.long)
     py = (camera[:,1,:]/camera[:,2,:]).round().type(torch.long)
     pz = camera[:,2,:]
@@ -127,7 +128,7 @@ class VoxelNet(pl.LightningModule):
         self.test_save_path = 0
         self.test_scene = 0
 
-        self.initialize_volume()
+        #self.initialize_volume()
 
 
     def initialize_volume(self):
@@ -187,7 +188,13 @@ class VoxelNet(pl.LightningModule):
             valid.detach_()
 
         self.volume = self.volume + volume
-        self.valid = self.valid + valid
+        self.valid = self.valid + valid.long()
+
+        #print(self.volume.shape, self.valid.shape)
+
+        #print(self.valid.type(), valid.type())
+        #print(self.valid, self.valid.sum())
+        #print(self.volume)
 
     def inference2(self, targets=None):
         """ Refines accumulated features and regresses output TSDF.
@@ -203,9 +210,10 @@ class VoxelNet(pl.LightningModule):
             tuple of dicts ({outputs}, {losses})
                 if targets is None, losses is empty
         """
-
         volume = self.volume/self.valid
-
+        
+        #print(self.volume)
+        #print(self.valid, self.valid.sum())
         # remove nans (where self.valid==0)
         volume = volume.transpose(0,1)
         volume[:,self.valid.squeeze(1)==0]=0
@@ -415,14 +423,21 @@ class VoxelNet(pl.LightningModule):
         return {'val_loss': avg_loss, 'log': avg_losses}
 
     def test_step(self, batch, batch_idx):
-        projection = batch['projection'].unsqueeze(0)
-        image = batch['image'].unsqueeze(0)
+        projection = batch['projection']
+        image = batch['image']
+
+        #print(projection.shape, image.shape)
+
+        #print(batch_idx)
 
         self.inference1(projection, image=image)
+
+        #print(self.volume, self.valid)
 
         return {}
 
     def test_epoch_end(self, outputs):
+        #print(self.volume, self.valid)
         outputs, losses = self.inference2()
 
         tsdf_pred = self.postprocess(outputs)[0]
