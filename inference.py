@@ -104,28 +104,49 @@ def process(info_file, model, num_frames, save_path, total_scenes_index, total_s
                   len(dataloader)
             )
 
-        print(d['projection'].unsqueeze(0).shape, d['image'].unsqueeze(0).shape)
+        #print(d['projection'].unsqueeze(0).shape, d['image'].unsqueeze(0).shape)
         model.inference1(d['projection'].unsqueeze(0).cuda(),
                          image=d['image'].unsqueeze(0).cuda())
-    outputs, losses = model.inference2()
 
-    tsdf_pred = model.postprocess(outputs)[0]
+        outputs, losses = model.inference2()
 
-    # TODO: set origin in model... make consistent with offset above?
-    tsdf_pred.origin = offset.view(1,3).cuda()
+        tsdf_pred = model.postprocess(outputs)[0]
+
+        # TODO: set origin in model... make consistent with offset above?
+        tsdf_pred.origin = offset.view(1,3).cuda()
+    
+
+        if 'semseg' in tsdf_pred.attribute_vols:
+            mesh_pred = tsdf_pred.get_mesh('semseg')
+
+            # save vertex attributes seperately since trimesh doesn't
+            np.savez(os.path.join(save_path, '%s_attributes.npz'%scene), 
+                    **mesh_pred.vertex_attributes)
+        else:
+            mesh_pred = tsdf_pred.get_mesh()
+
+        tsdf_pred.save(os.path.join(save_path, '%s_%d.npz'%(scene,j)))
+        mesh_pred.export(os.path.join(save_path, '%s_%d.ply'%(scene,j)))
+
+    # outputs, losses = model.inference2()
+
+    # tsdf_pred = model.postprocess(outputs)[0]
+
+    # # TODO: set origin in model... make consistent with offset above?
+    # tsdf_pred.origin = offset.view(1,3).cuda()
    
 
-    if 'semseg' in tsdf_pred.attribute_vols:
-        mesh_pred = tsdf_pred.get_mesh('semseg')
+    # if 'semseg' in tsdf_pred.attribute_vols:
+    #     mesh_pred = tsdf_pred.get_mesh('semseg')
 
-        # save vertex attributes seperately since trimesh doesn't
-        np.savez(os.path.join(save_path, '%s_attributes.npz'%scene), 
-                **mesh_pred.vertex_attributes)
-    else:
-        mesh_pred = tsdf_pred.get_mesh()
+    #     # save vertex attributes seperately since trimesh doesn't
+    #     np.savez(os.path.join(save_path, '%s_attributes.npz'%scene), 
+    #             **mesh_pred.vertex_attributes)
+    # else:
+    #     mesh_pred = tsdf_pred.get_mesh()
 
-    tsdf_pred.save(os.path.join(save_path, '%s.npz'%scene))
-    mesh_pred.export(os.path.join(save_path, '%s.ply'%scene))
+    # tsdf_pred.save(os.path.join(save_path, '%s.npz'%scene))
+    # mesh_pred.export(os.path.join(save_path, '%s.ply'%scene))
 
 
 

@@ -1,6 +1,7 @@
-DATAROOT/*
-METAROOT/*
+DATAROOT*/*
+METAROOT*/*
 results/*
+legacy/*
 lightning_logs/*
 */__pycache__/*
 
