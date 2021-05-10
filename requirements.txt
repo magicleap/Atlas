@@ -15,7 +15,6 @@ cycler==0.10.0
 Cython==0.29.22
 decorator==4.4.2
 defusedxml==0.7.1
-detectron2==0.3+cu102
 entrypoints==0.3
 freetype-py==2.2.0
 fsspec==0.8.7
@@ -54,7 +53,7 @@ nbformat==5.1.2
 nest-asyncio==1.5.1
 networkx==2.5
 notebook==6.3.0
-numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1603479632437/work
+numpy
 oauthlib==3.1.0
 olefile==0.46
 open3d==0.10.0.0
@@ -63,7 +62,7 @@ pandocfilters==1.4.3
 parso==0.8.2
 pexpect==4.8.0
 pickleshare==0.7.5
-Pillow @ file:///tmp/build/80754af9/pillow_1615057347459/work
+Pillow
 portalocker==2.3.0
 prometheus-client==0.9.0
 prompt-toolkit==3.0.18
@@ -92,7 +91,7 @@ rsa==4.7.2
 scikit-image==0.18.1
 scipy==1.6.2
 Send2Trash==1.5.0
-six @ file:///tmp/build/80754af9/six_1605205313296/work
+six
 tabulate==0.8.9
 tensorboard==2.4.1
 tensorboard-plugin-wit==1.8.0
